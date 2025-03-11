@@ -1,0 +1,27 @@
+name: Node_JS_testing #the name will show up on github actions 
+on: 
+  push: 
+    branches: [ "main" ] # whenever there is a push to the following branches, activate this script
+  pull_request:
+    branches: [ "main" ]
+
+  workflow_dispatch:
+
+  jobs: 
+    build: 
+      runs_on: ubuntu-latest
+
+      steps:
+      - name: Checkout Repository #checkout from a specific git repo
+        uses: actions/checkout@v4 #
+      - name: Set up Node.js #these names show on when github action jobs are working and showing
+        uses: actions/setup-node@v4 # a ready script by github
+        with: 
+          node-version: 20
+      - name: Install Dependencies #You have to install any dependencies you had on the server as well for it to work
+        run: npm install
+
+      - name: Run tests # running tests as we push, which will test everything befor merging to main
+        env: 
+          API_KEY: {{secrets.API_KEY}} #note, you cant directly push API key to Github because of security reasons
+        run: npm test
